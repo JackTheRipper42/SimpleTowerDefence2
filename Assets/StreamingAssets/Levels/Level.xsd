@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="SpawnType">
+    <xs:attribute name="Id" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="DelayType">
+    <xs:attribute name="Value" type="xs:float" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="LoopType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="Spawn" type="SpawnType"/>
+      <xs:element name="Loop" type="LoopType"/>
+      <xs:element name="Delay" type="DelayType"/>
+    </xs:choice>
+    <xs:attribute name="Count" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="SpawnerSequenceType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="Spawn" type="SpawnType"/>
+      <xs:element name="Loop" type="LoopType"/>
+      <xs:element name="Delay" type="DelayType"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="WavesType">
+    <xs:sequence>
+      <xs:element name="Wave" type="SpawnerSequenceType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Map1Type">
+    <xs:sequence>
+      <xs:element name="Path" type="WavesType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--<xs:complexType name="Map2Type">
+    <xs:sequence>
+      <xs:element name="Path1" type="WavesType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Path2" type="WavesType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Path3" type="WavesType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>-->
+
+  <xs:group name="MapElements">
+    <xs:choice>
+      <xs:element name="Map1" type="Map1Type"/>
+      <!--<xs:element name="Map2" type="Map2Type"/>-->
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name ="Level">
+    <xs:complexType>
+      <xs:choice maxOccurs="1">
+        <xs:group ref="MapElements"/>
+      </xs:choice>
+      <xs:attribute name="Name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

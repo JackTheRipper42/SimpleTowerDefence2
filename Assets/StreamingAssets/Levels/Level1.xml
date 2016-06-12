@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" ?>
+<Level Name="Level1">
+  <Map1>
+    <Path>
+      <Wave>
+        <Delay Value="2"/>
+        <Spawn Id="test"/>
+        <Loop Count="4">
+          <Delay Value="1.8"/>
+          <Spawn Id="34"/>
+        </Loop>
+      </Wave>
+      <Wave>
+        <Delay Value="1"/>
+        <Loop Count="42">
+          <Delay Value="5"/>
+          <Spawn Id="a"/>
+          <Delay Value="0.4"/>
+          <Spawn Id="a"/>
+          <Delay Value="0.8"/>
+          <Spawn Id="b"/>
+        </Loop>
+      </Wave>
+    </Path>
+  </Map1>
+</Level>

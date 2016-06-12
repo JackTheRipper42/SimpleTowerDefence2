@@ -320,7 +320,7 @@ GameObject:
   - 4: {fileID: 254334342}
   - 114: {fileID: 254334341}
   m_Layer: 0
-  m_Name: MainPath
+  m_Name: Path
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
