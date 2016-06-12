@@ -7,6 +7,7 @@ namespace Assets.Scripts
     public class Enemy : MonoBehaviour
     {
         public float Speed = 5f;
+        public LayerMask TerrainLayerMask;
 
         private State _state;
         private Vector3 _startPosition;
@@ -29,7 +30,7 @@ namespace Assets.Scripts
             _state = State.Idle;
             _path = path;
             _waypointIndex = 0;
-            SetPosition(path[0]);
+            SetPosition(path[0], path[1] - path[0]);
             MoveToNextWaypoint();
         }
 
@@ -43,10 +44,9 @@ namespace Assets.Scripts
                     case State.Idle:
                         break;
                     case State.Walking:
-                        transform.rotation = Quaternion.LookRotation(_path[_waypointIndex] - _startPosition);
                         _lerpPosition += (Speed*Time.deltaTime)/_lerpLength;
                         var newPosition = Vector3.Lerp(_startPosition, _path[_waypointIndex], _lerpPosition);
-                        SetPosition(newPosition);
+                        SetPosition(newPosition, _path[_waypointIndex] - _startPosition);
                         if (_lerpPosition >= 1)
                         {
                             MoveToNextWaypoint();
@@ -78,9 +78,28 @@ namespace Assets.Scripts
             }
         }
 
-        private void SetPosition(Vector3 position)
+        private void SetPosition(Vector3 position, Vector3 waypointDirection)
         {
-            transform.position = position;
+            var raycastStart = position + Vector3.up*100f;
+            var ray = new Ray(raycastStart, Vector3.down);
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, float.PositiveInfinity, TerrainLayerMask.value))
+            {
+                Debug.DrawLine(hit.point, hit.point + hit.normal*10f, Color.red);
+                Debug.DrawLine(transform.position, hit.point, Color.blue);
+
+                var t = -Vector3.Dot(waypointDirection, hit.normal)/hit.normal.sqrMagnitude;
+                
+                var lookDirection = waypointDirection + t*hit.normal;
+
+                transform.rotation = Quaternion.LookRotation(lookDirection);
+                transform.position = hit.point;
+            }
+            else
+            {
+                transform.position = position;
+            }
         }
 
         private enum State
