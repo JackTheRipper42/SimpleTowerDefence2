@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -7,10 +8,18 @@ namespace Assets.Scripts
     {
         public Enemy Enemy;
 
+        private List<Enemy> _enemies;
+
+        public IEnumerable<Enemy> Enemies
+        {
+            get { return _enemies; }
+        }
+
         protected virtual void Start()
         {
-            var path = FindObjectsOfType<Path>().First();
+            _enemies = new List<Enemy> {Enemy};
 
+            var path = FindObjectsOfType<Path>().First();
             Enemy.Initialize(path.GetPath());
         }
     }

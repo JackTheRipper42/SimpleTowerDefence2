@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -11,11 +12,14 @@ namespace Assets.Scripts
         public float LaserWidth = 0.2f;
         public Color LaserColor = Color.red;
         public LayerMask ObstacleLayerMask;
+        public LayerMask EnemzLayerMask;
         public float RotationSpeed = 40f;
-        public Enemy Enemy;
+
+        private GameManager _gameManager;
 
         protected virtual void Start()
         {
+            _gameManager = FindObjectOfType<GameManager>();
             BeamRenderer.SetVertexCount(2);
             BeamRenderer.SetWidth(LaserWidth, LaserWidth);
             BeamRenderer.SetColors(LaserColor, LaserColor);
@@ -23,12 +27,19 @@ namespace Assets.Scripts
 
         protected virtual void Update()
         {
-            if (Enemy == null || Time.deltaTime <= 0f)
+            if (Time.deltaTime <= 0f)
             {
                 return;
             }
 
-            var enemyRenderer = Enemy.GetComponentsInChildren<Renderer>();
+            var enemy = _gameManager.Enemies.FirstOrDefault();
+
+            if (enemy == null)
+            {
+                return;
+            }
+
+            var enemyRenderer = enemy.GetComponentsInChildren<Renderer>();
             var targetPosition = CalculateCenterPosition(enemyRenderer);
 
             if (Physics.Linecast(Barrel.transform.position, targetPosition, ObstacleLayerMask.value))
@@ -40,15 +51,19 @@ namespace Assets.Scripts
                 var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position);
                 var currentRotation = Barrel.rotation;
                 var realRotation = Quaternion.RotateTowards(currentRotation, lookRotation, RotationSpeed*Time.deltaTime);
-                
+
                 Turret.rotation = Quaternion.Euler(0f, realRotation.eulerAngles.y, 0f);
                 Barrel.rotation = Quaternion.Euler(realRotation.eulerAngles.x, realRotation.eulerAngles.y, 0f);
 
                 RaycastHit hit;
-                if (Physics.Raycast(new Ray(Barrel.transform.position, realRotation * Vector3.forward), out hit))
+                if (Physics.Raycast(
+                    new Ray(Barrel.transform.position, realRotation*Vector3.forward),
+                    out hit,
+                    float.PositiveInfinity,
+                    ObstacleLayerMask | EnemzLayerMask))
                 {
-                    var enemy = hit.transform.GetComponentInParent<Enemy>();
-                    if (enemy != null)
+                    var hittedEmeny = hit.transform.GetComponentInParent<Enemy>();
+                    if (hittedEmeny != null)
                     {
                         RenderLaserBeam(targetPosition);
                     }
