@@ -11,6 +11,7 @@ namespace Assets.Scripts
         public float LaserWidth = 0.2f;
         public Color LaserColor = Color.red;
         public LayerMask ObstacleLayerMask;
+        public float RotationSpeed = 40f;
         public Enemy Enemy;
 
         protected virtual void Start()
@@ -22,7 +23,7 @@ namespace Assets.Scripts
 
         protected virtual void Update()
         {
-            if (Enemy == null)
+            if (Enemy == null || Time.deltaTime <= 0f)
             {
                 return;
             }
@@ -36,13 +37,32 @@ namespace Assets.Scripts
             }
             else
             {
-                var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position).eulerAngles;
-                Turret.rotation = Quaternion.Euler(0f, lookRotation.y, 0f);
-                Barrel.rotation = Quaternion.Euler(lookRotation.x, lookRotation.y, 0f);
+                var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position);
+                var currentRotation = Barrel.rotation;
+                var realRotation = Quaternion.RotateTowards(currentRotation, lookRotation, RotationSpeed*Time.deltaTime);
+                
+                Turret.rotation = Quaternion.Euler(0f, realRotation.eulerAngles.y, 0f);
+                Barrel.rotation = Quaternion.Euler(realRotation.eulerAngles.x, realRotation.eulerAngles.y, 0f);
 
-                RenderLaserBeam(targetPosition);
+                RaycastHit hit;
+                if (Physics.Raycast(new Ray(Barrel.transform.position, realRotation * Vector3.forward), out hit))
+                {
+                    var enemy = hit.transform.GetComponentInParent<Enemy>();
+                    if (enemy != null)
+                    {
+                        RenderLaserBeam(targetPosition);
+                    }
+                    else
+                    {
+                        DisableLaserBeam();
+                    }
+
+                }
+                else
+                {
+                    DisableLaserBeam();
+                }
             }
-
         }
 
         private void RenderLaserBeam(Vector3 targetPosition)
