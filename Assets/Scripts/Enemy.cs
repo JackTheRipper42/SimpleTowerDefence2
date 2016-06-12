@@ -86,8 +86,7 @@ namespace Assets.Scripts
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, float.PositiveInfinity, TerrainLayerMask.value))
             {
-                Debug.DrawLine(hit.point, hit.point + hit.normal*10f, Color.red);
-                Debug.DrawLine(transform.position, hit.point, Color.blue);
+                Debug.DrawRay(hit.point, hit.point + hit.normal*1f, Color.red);
 
                 var t = -Vector3.Dot(waypointDirection, hit.normal)/hit.normal.sqrMagnitude;
                 
