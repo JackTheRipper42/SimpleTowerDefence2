@@ -10,6 +10,7 @@ namespace Assets.Scripts
         public LineRenderer BeamRenderer;
         public float LaserWidth = 0.2f;
         public Color LaserColor = Color.red;
+        public LayerMask ObstacleLayerMask;
         public Enemy Enemy;
 
         protected virtual void Start()
@@ -29,12 +30,31 @@ namespace Assets.Scripts
             var enemyRenderer = Enemy.GetComponentsInChildren<Renderer>();
             var targetPosition = CalculateCenterPosition(enemyRenderer);
 
-            var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position).eulerAngles;
-            Turret.rotation = Quaternion.Euler(0f, lookRotation.y, 0f);
-            Barrel.rotation = Quaternion.Euler(lookRotation.x, lookRotation.y, 0f);
+            if (Physics.Linecast(Barrel.transform.position, targetPosition, ObstacleLayerMask.value))
+            {
+                DisableLaserBeam();
+            }
+            else
+            {
+                var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position).eulerAngles;
+                Turret.rotation = Quaternion.Euler(0f, lookRotation.y, 0f);
+                Barrel.rotation = Quaternion.Euler(lookRotation.x, lookRotation.y, 0f);
 
+                RenderLaserBeam(targetPosition);
+            }
+
+        }
+
+        private void RenderLaserBeam(Vector3 targetPosition)
+        {
+            BeamRenderer.enabled = true;
             BeamRenderer.SetPosition(0, BeamRenderer.transform.position);
             BeamRenderer.SetPosition(1, targetPosition);
+        }
+
+        private void DisableLaserBeam()
+        {
+            BeamRenderer.enabled = false;
         }
 
         private static Vector3 CalculateCenterPosition(IEnumerable<Renderer> targetRenderers)
