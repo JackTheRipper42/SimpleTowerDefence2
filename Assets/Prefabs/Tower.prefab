@@ -488,7 +488,7 @@ MonoBehaviour:
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  EnemzLayerMask:
+  EnemyLayerMask:
     serializedVersion: 2
     m_Bits: 512
   RotationSpeed: 40

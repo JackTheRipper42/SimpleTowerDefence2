@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public float LaserWidth = 0.2f;
         public Color LaserColor = Color.red;
         public LayerMask ObstacleLayerMask;
-        public LayerMask EnemzLayerMask;
+        public LayerMask EnemyLayerMask;
         public float RotationSpeed = 40f;
         public float FireTime = 0.5f;
         public float ReloadTime = 4f;
@@ -64,7 +64,7 @@ namespace Assets.Scripts
                     new Ray(Barrel.transform.position, realRotation*Vector3.forward),
                     out hit,
                     float.PositiveInfinity,
-                    ObstacleLayerMask | EnemzLayerMask))
+                    ObstacleLayerMask | EnemyLayerMask))
                 {
                     var hittedEmeny = hit.transform.GetComponentInParent<Enemy>();
                     if (hittedEmeny != null)
@@ -87,7 +87,6 @@ namespace Assets.Scripts
                     {
                         DisableLaserBeam();
                     }
-
                 }
                 else
                 {
