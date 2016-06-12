@@ -38,6 +38,7 @@ namespace Assets.Scripts
 
         /// <remarks/>
         [XmlElement("Map1", typeof(Map1Type), Form = XmlSchemaForm.Unqualified)]
+        [XmlElement("Map2", typeof(Map2Type), Form = XmlSchemaForm.Unqualified)]
         public object Item
         {
             get { return itemField; }
@@ -76,6 +77,49 @@ namespace Assets.Scripts
         {
             get { return pathField; }
             set { pathField = value; }
+        }
+    }
+
+    /// <remarks/>
+    [GeneratedCode("xsd", "4.6.81.0")]
+    [Serializable]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    public partial class Map2Type
+    {
+
+        private object[][] path1Field;
+
+        private object[][] path2Field;
+
+        /// <remarks/>
+        [XmlArray(Form = XmlSchemaForm.Unqualified)]
+        [XmlArrayItem("Wave", Form = XmlSchemaForm.Unqualified, IsNullable = false)]
+        [XmlArrayItem("Delay", typeof(DelayType), Form = XmlSchemaForm.Unqualified, IsNullable = false,
+            NestingLevel = 1)]
+        [XmlArrayItem("Loop", typeof(LoopType), Form = XmlSchemaForm.Unqualified, IsNullable = false,
+            NestingLevel = 1)]
+        [XmlArrayItem("Spawn", typeof(SpawnType), Form = XmlSchemaForm.Unqualified, IsNullable = false,
+            NestingLevel = 1)]
+        public object[][] Path1
+        {
+            get { return path1Field; }
+            set { path1Field = value; }
+        }
+
+        /// <remarks/>
+        [XmlArray(Form = XmlSchemaForm.Unqualified)]
+        [XmlArrayItem("Wave", Form = XmlSchemaForm.Unqualified, IsNullable = false)]
+        [XmlArrayItem("Delay", typeof(DelayType), Form = XmlSchemaForm.Unqualified, IsNullable = false,
+            NestingLevel = 1)]
+        [XmlArrayItem("Loop", typeof(LoopType), Form = XmlSchemaForm.Unqualified, IsNullable = false,
+            NestingLevel = 1)]
+        [XmlArrayItem("Spawn", typeof(SpawnType), Form = XmlSchemaForm.Unqualified, IsNullable = false,
+            NestingLevel = 1)]
+        public object[][] Path2
+        {
+            get { return path2Field; }
+            set { path2Field = value; }
         }
     }
 

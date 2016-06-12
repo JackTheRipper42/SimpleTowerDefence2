@@ -51,6 +51,13 @@ namespace Assets.Scripts
                 StartCoroutine(SpawnWaves(map1Type.Path, paths["Path"]));
                 return;
             }
+            var map2Type = map as Map2Type;
+            if (map2Type != null)
+            {
+                StartCoroutine(SpawnWaves(map2Type.Path1, paths["Path1"]));
+                StartCoroutine(SpawnWaves(map2Type.Path2, paths["Path2"]));
+                return;
+            }
             throw new NotSupportedException(string.Format("The map type '{0}' is not supported.", map.GetType().Name));
 
         }
@@ -102,6 +109,10 @@ namespace Assets.Scripts
             if (mapType == typeof(Map1Type))
             {
                 return "Map1";
+            }
+            if (mapType == typeof(Map2Type))
+            {
+                return "Map2";
             }
             throw new NotSupportedException(string.Format("The map type '{0}' is not supported.", mapType.Name));
         }

@@ -38,18 +38,17 @@
     </xs:sequence>
   </xs:complexType>
 
-  <!--<xs:complexType name="Map2Type">
+  <xs:complexType name="Map2Type">
     <xs:sequence>
       <xs:element name="Path1" type="WavesType" minOccurs="1" maxOccurs="1"/>
       <xs:element name="Path2" type="WavesType" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="Path3" type="WavesType" minOccurs="1" maxOccurs="1"/>
     </xs:sequence>
-  </xs:complexType>-->
+  </xs:complexType>
 
   <xs:group name="MapElements">
     <xs:choice>
       <xs:element name="Map1" type="Map1Type"/>
-      <!--<xs:element name="Map2" type="Map2Type"/>-->
+      <xs:element name="Map2" type="Map2Type"/>
     </xs:choice>
   </xs:group>
 

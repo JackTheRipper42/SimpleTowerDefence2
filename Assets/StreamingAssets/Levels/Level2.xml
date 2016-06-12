@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" ?>
+<Level Name="Level2">
+  <Map2>
+    <Path1>
+      <Wave>
+        <Delay Value="2"/>
+        <Spawn Id="test"/>
+        <Loop Count="4">
+          <Delay Value="1.8"/>
+          <Spawn Id="34"/>
+        </Loop>
+        <Delay Value="2"/>
+        <Spawn Id="test"/>
+        <Loop Count="4">
+          <Delay Value="1.8"/>
+          <Spawn Id="34"/>
+        </Loop>
+      </Wave>
+      <Wave>
+        <Delay Value="1"/>
+        <Loop Count="42">
+          <Delay Value="5"/>
+          <Spawn Id="a"/>
+          <Delay Value="0.4"/>
+          <Spawn Id="a"/>
+          <Delay Value="0.8"/>
+          <Spawn Id="b"/>
+        </Loop>
+      </Wave>
+    </Path1>
+    <Path2>
+      <Wave>
+        <Delay Value="2"/>
+        <Spawn Id="test"/>
+        <Loop Count="4">
+          <Delay Value="1.8"/>
+          <Spawn Id="34"/>
+        </Loop>
+      </Wave>
+      <Wave>
+        <Delay Value="1"/>
+        <Loop Count="42">
+          <Delay Value="2"/>
+          <Spawn Id="a"/>
+          <Delay Value="0.4"/>
+          <Spawn Id="a"/>
+          <Delay Value="0.8"/>
+          <Spawn Id="b"/>
+        </Loop>
+      </Wave>
+    </Path2>
+
+  </Map2>
+</Level>

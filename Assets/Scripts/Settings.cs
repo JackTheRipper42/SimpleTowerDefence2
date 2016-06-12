@@ -20,7 +20,7 @@ namespace Assets.Scripts
         {
             DontDestroyOnLoad(this);
             Levels = ParseLevels();
-            LevelIndex = 0;
+            LevelIndex = Levels.Count - 1;
         }
 
         private static List<Level> ParseLevels()
