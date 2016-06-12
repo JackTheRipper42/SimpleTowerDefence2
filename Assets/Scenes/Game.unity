@@ -238,6 +238,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Turret: {fileID: 663318264}
   Barrel: {fileID: 1425172261}
+  BeamRenderer: {fileID: 1793213741}
+  LaserWidth: 0.02
+  LaserColor: {r: 1, g: 0, b: 0, a: 1}
   Enemy: {fileID: 783654996}
 --- !u!4 &663318264 stripped
 Transform:
@@ -249,7 +252,78 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 67023732}
   m_Script: {fileID: 11500000, guid: bb238e6dc85cdb648894d8104f50b811, type: 3}
+--- !u!4 &883139386 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 495472, guid: 2267cc0bfafd0de41936e341bc218e47, type: 2}
+  m_PrefabInternal: {fileID: 195694524}
 --- !u!4 &1425172261 stripped
 Transform:
   m_PrefabParentObject: {fileID: 463942, guid: 2267cc0bfafd0de41936e341bc218e47, type: 2}
   m_PrefabInternal: {fileID: 195694524}
+--- !u!1 &1793213739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1793213740}
+  - 120: {fileID: 1793213741}
+  m_Layer: 0
+  m_Name: beam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1793213740
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1793213739}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.98, z: 0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 883139386}
+  m_RootOrder: 0
+--- !u!120 &1793213741
+LineRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1793213739}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 9de3e09c9f1e0b44e8e5c6c61b395d6a, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    startWidth: 1
+    endWidth: 1
+    m_StartColor:
+      serializedVersion: 2
+      rgba: 4294967295
+    m_EndColor:
+      serializedVersion: 2
+      rgba: 4294967295
+  m_UseWorldSpace: 1
