@@ -14,12 +14,16 @@ namespace Assets.Scripts
         public LayerMask ObstacleLayerMask;
         public LayerMask EnemzLayerMask;
         public float RotationSpeed = 40f;
+        public float FireTime = 0.5f;
+        public float ReloadTime = 4f;
 
         private GameManager _gameManager;
+        private float _lastShot;
 
         protected virtual void Start()
         {
             _gameManager = FindObjectOfType<GameManager>();
+            _lastShot = int.MinValue;
             BeamRenderer.SetVertexCount(2);
             BeamRenderer.SetWidth(LaserWidth, LaserWidth);
             BeamRenderer.SetColors(LaserColor, LaserColor);
@@ -65,7 +69,19 @@ namespace Assets.Scripts
                     var hittedEmeny = hit.transform.GetComponentInParent<Enemy>();
                     if (hittedEmeny != null)
                     {
-                        RenderLaserBeam(targetPosition);
+                        if (Time.time <= _lastShot + FireTime)
+                        {
+                            RenderLaserBeam(targetPosition);
+                        }
+                        else if (Time.time >= _lastShot + FireTime + ReloadTime)
+                        {
+                            _lastShot = Time.time;
+                            RenderLaserBeam(targetPosition);
+                        }
+                        else
+                        {
+                            DisableLaserBeam();
+                        }
                     }
                     else
                     {

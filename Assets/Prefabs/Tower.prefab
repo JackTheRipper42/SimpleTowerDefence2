@@ -492,6 +492,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   RotationSpeed: 40
+  FireTime: 0.5
+  ReloadTime: 4
 --- !u!120 &12032656
 LineRenderer:
   m_ObjectHideFlags: 1
