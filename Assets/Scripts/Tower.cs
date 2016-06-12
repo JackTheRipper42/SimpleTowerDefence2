@@ -19,8 +19,6 @@ namespace Assets.Scripts
             var enemyRenderer = Enemy.GetComponentsInChildren<Renderer>();
             var targetPosition = CalculateCenterPosition(enemyRenderer);
 
-            Debug.DrawLine(Barrel.transform.position, targetPosition, Color.magenta);
-
             var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position).eulerAngles;
             Turret.rotation = Quaternion.Euler(0f, lookRotation.y, 0f);
             Barrel.rotation = Quaternion.Euler(lookRotation.x, lookRotation.y, 0f);
