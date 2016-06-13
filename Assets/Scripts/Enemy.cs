@@ -7,14 +7,17 @@ namespace Assets.Scripts
     public class Enemy : MonoBehaviour
     {
         public float Speed = 5f;
+        public float MaxHealth = 100f;
         public LayerMask TerrainLayerMask;
-
+        
         private State _state;
         private Vector3 _startPosition;
         private float _lerpPosition;
         private float _lerpLength;
         private Vector3[] _path;
         private int _waypointIndex;
+        private float _health;
+        private GameManager _gameManager;
 
         public void Initialize([NotNull] Vector3[] path)
         {
@@ -32,6 +35,27 @@ namespace Assets.Scripts
             _waypointIndex = 0;
             SetPosition(path[0], path[1] - path[0]);
             MoveToNextWaypoint();
+        }
+
+        public void Hit(float damage)
+        {
+            if (_state == State.Dead)
+            {
+                return;
+            }
+
+            _health -= damage;
+            if (_health <= 0)
+            {
+                _state = State.Dead;
+                _gameManager.Killed(this);
+            }
+        }
+
+        protected virtual void Start()
+        {
+            _gameManager = FindObjectOfType<GameManager>();
+            _health = MaxHealth;
         }
 
         protected virtual void Update()

@@ -21,6 +21,12 @@ namespace Assets.Scripts
             get { return _enemies; }
         }
 
+        public void Killed(Enemy enemy)
+        {
+            _enemies.Remove(enemy);
+            Destroy(enemy.gameObject);
+        }
+
         protected virtual void Start()
         {
             _settings = FindObjectOfType<Settings>();

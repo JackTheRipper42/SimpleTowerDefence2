@@ -16,6 +16,7 @@ namespace Assets.Scripts
         public float RotationSpeed = 40f;
         public float FireTime = 0.5f;
         public float ReloadTime = 4f;
+        public float Damage = 30f;
 
         private GameManager _gameManager;
         private float _lastShot;
@@ -71,12 +72,12 @@ namespace Assets.Scripts
                     {
                         if (Time.time <= _lastShot + FireTime)
                         {
-                            RenderLaserBeam(targetPosition);
+                            EnableLaserBeam(enemy, targetPosition);
                         }
                         else if (Time.time >= _lastShot + FireTime + ReloadTime)
                         {
                             _lastShot = Time.time;
-                            RenderLaserBeam(targetPosition);
+                            EnableLaserBeam(enemy, targetPosition);
                         }
                         else
                         {
@@ -95,11 +96,12 @@ namespace Assets.Scripts
             }
         }
 
-        private void RenderLaserBeam(Vector3 targetPosition)
+        private void EnableLaserBeam(Enemy target, Vector3 targetPosition)
         {
             BeamRenderer.enabled = true;
             BeamRenderer.SetPosition(0, BeamRenderer.transform.position);
             BeamRenderer.SetPosition(1, targetPosition);
+            target.Hit(Damage/FireTime*Time.deltaTime);
         }
 
         private void DisableLaserBeam()
