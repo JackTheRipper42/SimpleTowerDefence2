@@ -1,13 +1,11 @@
-﻿using Assets.Scripts;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.Scripts
 {
     public class LevelParser
     {
