@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -11,24 +9,11 @@ namespace Assets.Scripts
     {
         public GameObject MainMenuPanel;
         public GameObject OptionsMenuPanel;
-        public Dropdown LevelDropdown;
-        public Text DescriptionText;
-        public Dropdown QualityDropdown;
 
         private const string GameScene = "Game";
 
-        private Settings _settings;
-
         protected virtual void Start()
         {
-            _settings = FindObjectOfType<Settings>();
-            LevelDropdown.AddOptions(_settings.Levels.Select(level => level.Name).ToList());
-            LevelDropdown.value = _settings.LevelIndex;
-            DescriptionText.text = _settings.Level.Description ?? string.Empty;
-
-            QualityDropdown.AddOptions(QualitySettings.names.ToList());
-            QualityDropdown.value = QualitySettings.GetQualityLevel();
-
             Show(Menu.Main);
         }
 
@@ -50,20 +35,12 @@ namespace Assets.Scripts
 
         public void OptionsOkClicked()
         {
-            QualitySettings.SetQualityLevel(QualityDropdown.value);
             Show(Menu.Main);
         }
 
         public void OptionsCancelClicked()
         {
-            QualityDropdown.value = QualitySettings.GetQualityLevel();
             Show(Menu.Main);
-        }
-
-        public void MainMenuLevelChanged(int value)
-        {
-            _settings.LevelIndex = value;
-            DescriptionText.text = _settings.Level.Description ?? string.Empty;
         }
 
         private void Show(Menu menu)
