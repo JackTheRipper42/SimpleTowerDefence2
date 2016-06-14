@@ -19,24 +19,9 @@ namespace Assets.Scripts
         protected virtual void Start()
         {
             DontDestroyOnLoad(this);
-            Levels = ParseLevels();
+            var levelParser = new LevelParser();
+            Levels = levelParser.ParseLevels();
             LevelIndex = 0;
-        }
-
-        private static List<Level> ParseLevels()
-        {
-            var files = Directory.GetFiles(System.IO.Path.Combine(Application.streamingAssetsPath, "Levels"), "*.xml");
-            var serializer = new XmlSerializer(typeof(Level));
-            var levels = new List<Level>(files.Length);
-            foreach (var file in files)
-            {
-                using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
-                {
-                    var level = (Level)serializer.Deserialize(stream);
-                    levels.Add(level);
-                }
-            }
-            return levels;
         }
     }
 }
