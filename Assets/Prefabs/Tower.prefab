@@ -510,7 +510,8 @@ MonoBehaviour:
   RotationSpeed: 40
   FireTime: 0.5
   ReloadTime: 4
-  Damage: 30
+  Damage: 200
+  Range: 30
 --- !u!120 &12032656
 LineRenderer:
   m_ObjectHideFlags: 1

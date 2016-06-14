@@ -21,6 +21,7 @@ namespace Assets.Scripts
 
         private GameManager _gameManager;
         private float _lastShot;
+        private Enemy _target;
 
         protected virtual void Start()
         {
@@ -38,16 +39,17 @@ namespace Assets.Scripts
                 return;
             }
 
-            var enemy = _gameManager.Enemies.FirstOrDefault();
-
-            if (enemy == null)
+            if (_target == null || IsValidTarget(_target))
+            {
+                var possibleTargets = _gameManager.Enemies.Where(IsValidTarget);
+                _target = GetEnemy(possibleTargets);
+            }
+            if (_target == null)
             {
                 return;
             }
 
-            var enemyRenderer = enemy.GetComponentsInChildren<Renderer>();
-            var targetPosition = CalculateCenterPosition(enemyRenderer);
-            var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position);
+            var lookRotation = Quaternion.LookRotation(_target.CenterPosition - Barrel.transform.position);
             var currentRotation = Barrel.rotation;
             var realRotation = Quaternion.RotateTowards(currentRotation, lookRotation, RotationSpeed * Time.deltaTime);
             Turret.rotation = Quaternion.Euler(0f, realRotation.eulerAngles.y, 0f);
@@ -65,7 +67,7 @@ namespace Assets.Scripts
 
                 Enemy hit;
                 Vector3 hitPosition;
-                if (CanHit(raycastHits.ToList(), Barrel.transform.position, enemy, out hit, out hitPosition))
+                if (CanHit(raycastHits.ToList(), Barrel.transform.position, _target, out hit, out hitPosition))
                 {
                     if (canShootAgain)
                     {
@@ -95,20 +97,6 @@ namespace Assets.Scripts
         private void DisableLaserBeam()
         {
             BeamRenderer.enabled = false;
-        }
-
-        private static Vector3 CalculateCenterPosition(IEnumerable<Renderer> targetRenderers)
-        {
-            var centerSum = new Vector3();
-            var sizeSum = 0f;
-
-            foreach (var subRenderer in targetRenderers)
-            {
-                centerSum += subRenderer.bounds.center*subRenderer.bounds.size.magnitude;
-                sizeSum += subRenderer.bounds.size.magnitude;
-            }
-
-            return centerSum/sizeSum;
         }
 
         private bool CanHit(
@@ -142,6 +130,47 @@ namespace Assets.Scripts
                 }
             }
             return false;
+        }
+
+        private bool IsValidTarget(Enemy enemy)
+        {
+            if (!enemy.Alive)
+            {
+                return false;
+            }
+
+            if ((enemy.CenterPosition - Barrel.transform.position).magnitude > Range)
+            {
+                return false;
+            }
+
+            return !Physics.Linecast(Barrel.transform.position, enemy.CenterPosition, ObstacleLayerMask);
+        }
+
+        private float CalculateAngle(Vector3 targetPosition)
+        {
+            var relative = targetPosition - Barrel.transform.position;
+            var barrelVector = Barrel.transform.rotation*Vector3.forward;
+
+            return Mathf.Acos(Vector3.Dot(relative, barrelVector)/(relative.magnitude*barrelVector.magnitude));
+        }
+
+        private Enemy GetEnemy(IEnumerable<Enemy> enemies)
+        {
+            Enemy closestAngleEnemy = null;
+            float minAngle = float.MaxValue;
+
+            foreach (var enemy in enemies)
+            {
+                var angle = Mathf.Abs(CalculateAngle(enemy.CenterPosition));
+                if (angle < minAngle)
+                {
+                    closestAngleEnemy = enemy;
+                    minAngle = angle;
+                }
+            }
+
+            return closestAngleEnemy;
         }
     }
 }

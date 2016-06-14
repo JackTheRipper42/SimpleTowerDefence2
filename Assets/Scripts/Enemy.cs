@@ -20,6 +20,14 @@ namespace Assets.Scripts
         private float _health;
         private GameManager _gameManager;
         private Rigidbody _rigidbody;
+        private Renderer[] _renderers;
+
+        public Vector3 CenterPosition { get; private set; }
+
+        public bool Alive
+        {
+            get { return _state != State.Dead; }
+        }
 
         public void Initialize([NotNull] Vector3[] path)
         {
@@ -34,6 +42,8 @@ namespace Assets.Scripts
 
             _state = State.Idle;
             _path = path;
+            _rigidbody = GetComponent<Rigidbody>();
+            _renderers = GetComponentsInChildren<Renderer>();
             _waypointIndex = 0;
             Move(path[0], path[1] - path[0], Movement.Teleport);
             MoveToNextWaypoint();
@@ -58,6 +68,7 @@ namespace Assets.Scripts
         {
             _gameManager = FindObjectOfType<GameManager>();
             _rigidbody = GetComponent<Rigidbody>();
+            _renderers = GetComponentsInChildren<Renderer>();
             _health = MaxHealth;
         }
 
@@ -96,8 +107,8 @@ namespace Assets.Scripts
             {
                 _state = State.Walking;
                 _lerpPosition = 0;
-                _lerpLength = (_path[_waypointIndex] - transform.position).magnitude;
-                _startPosition = transform.position;
+                _lerpLength = (_path[_waypointIndex] - _rigidbody.position).magnitude;
+                _startPosition = _rigidbody.position;
             }
             else
             {
@@ -120,23 +131,22 @@ namespace Assets.Scripts
                 switch (movement)
                 {
                     case Movement.Teleport:
-                        transform.rotation = Quaternion.LookRotation(lookDirection);
-                        transform.position = hit.point;
+                        _rigidbody.position = hit.point;
                         break;
                     case Movement.Move:
-                        _rigidbody.rotation = Quaternion.LookRotation(lookDirection);
                         _rigidbody.MovePosition(hit.point);
                         break;
                     default:
                         throw new NotSupportedException();
                 }
+                _rigidbody.rotation = Quaternion.LookRotation(lookDirection);
             }
             else
             {
                 switch (movement)
                 {
                     case Movement.Teleport:
-                        transform.position = position;
+                        _rigidbody.position = position;
                         break;
                     case Movement.Move:
                         _rigidbody.MovePosition(position);
@@ -145,8 +155,24 @@ namespace Assets.Scripts
                         throw new NotSupportedException();
                 }
             }
+
+            CenterPosition = CalculateCenterPosition();
         }
 
+        private Vector3 CalculateCenterPosition()
+        {
+            var centerSum = new Vector3();
+            var sizeSum = 0f;
+
+            foreach (var subRenderer in _renderers)
+            {
+                centerSum += subRenderer.bounds.center * subRenderer.bounds.size.magnitude;
+                sizeSum += subRenderer.bounds.size.magnitude;
+            }
+
+            return centerSum / sizeSum;
+        }
+        
         private enum State
         {
             Idle,
