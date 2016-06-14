@@ -58,6 +58,7 @@
         <xs:group ref="MapElements"/>
       </xs:choice>
       <xs:attribute name="Name" type="xs:string" use="required"/>
+      <xs:attribute name="Description" type="xs:string" use="optional"/>
     </xs:complexType>
   </xs:element>
 </xs:schema>

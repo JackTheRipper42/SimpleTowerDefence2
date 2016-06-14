@@ -36,6 +36,8 @@ namespace Assets.Scripts
 
         private string nameField;
 
+        private string descriptionField;
+
         /// <remarks/>
         [XmlElement("Map1", typeof(Map1Type), Form = XmlSchemaForm.Unqualified)]
         [XmlElement("Map2", typeof(Map2Type), Form = XmlSchemaForm.Unqualified)]
@@ -51,6 +53,20 @@ namespace Assets.Scripts
         {
             get { return nameField; }
             set { nameField = value; }
+        }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public string Description
+        {
+            get
+            {
+                return descriptionField;
+            }
+            set
+            {
+                descriptionField = value;
+            }
         }
     }
 

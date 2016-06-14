@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" ?>
-<Level Name="Level1">
+<Level Name="Level1" Description="This is the first level.">
   <Map1>
     <Path>
       <Wave>
