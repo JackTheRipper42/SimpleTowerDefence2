@@ -17,6 +17,7 @@ namespace Assets.Scripts
         public float FireTime = 0.5f;
         public float ReloadTime = 4f;
         public float Damage = 30f;
+        public float Range = 30f;
 
         private GameManager _gameManager;
         private float _lastShot;
@@ -46,53 +47,40 @@ namespace Assets.Scripts
 
             var enemyRenderer = enemy.GetComponentsInChildren<Renderer>();
             var targetPosition = CalculateCenterPosition(enemyRenderer);
+            var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position);
+            var currentRotation = Barrel.rotation;
+            var realRotation = Quaternion.RotateTowards(currentRotation, lookRotation, RotationSpeed * Time.deltaTime);
+            Turret.rotation = Quaternion.Euler(0f, realRotation.eulerAngles.y, 0f);
+            Barrel.rotation = Quaternion.Euler(realRotation.eulerAngles.x, realRotation.eulerAngles.y, 0f);
 
-            if (Physics.Linecast(Barrel.transform.position, targetPosition, ObstacleLayerMask.value))
+            var stillShooting = Time.time <= _lastShot + FireTime;
+            var canShootAgain = Time.time >= _lastShot + FireTime + ReloadTime;
+
+            if (stillShooting || canShootAgain)
             {
-                DisableLaserBeam();
-            }
-            else
-            {
-                var lookRotation = Quaternion.LookRotation(targetPosition - Barrel.transform.position);
-                var currentRotation = Barrel.rotation;
-                var realRotation = Quaternion.RotateTowards(currentRotation, lookRotation, RotationSpeed*Time.deltaTime);
+                var raycastHits = Physics.RaycastAll(
+                    new Ray(Barrel.transform.position, realRotation * Vector3.forward),
+                    Range,
+                    ObstacleLayerMask | EnemyLayerMask);
 
-                Turret.rotation = Quaternion.Euler(0f, realRotation.eulerAngles.y, 0f);
-                Barrel.rotation = Quaternion.Euler(realRotation.eulerAngles.x, realRotation.eulerAngles.y, 0f);
-
-                RaycastHit hit;
-                if (Physics.Raycast(
-                    new Ray(Barrel.transform.position, realRotation*Vector3.forward),
-                    out hit,
-                    float.PositiveInfinity,
-                    ObstacleLayerMask | EnemyLayerMask))
+                Enemy hit;
+                Vector3 hitPosition;
+                if (CanHit(raycastHits.ToList(), Barrel.transform.position, enemy, out hit, out hitPosition))
                 {
-                    var hittedEmeny = hit.transform.GetComponentInParent<Enemy>();
-                    if (hittedEmeny != null)
+                    if (canShootAgain)
                     {
-                        if (Time.time <= _lastShot + FireTime)
-                        {
-                            EnableLaserBeam(enemy, targetPosition);
-                        }
-                        else if (Time.time >= _lastShot + FireTime + ReloadTime)
-                        {
-                            _lastShot = Time.time;
-                            EnableLaserBeam(enemy, targetPosition);
-                        }
-                        else
-                        {
-                            DisableLaserBeam();
-                        }
+                        _lastShot = Time.time;
                     }
-                    else
-                    {
-                        DisableLaserBeam();
-                    }
+                    EnableLaserBeam(hit, hitPosition);
                 }
                 else
                 {
                     DisableLaserBeam();
                 }
+            }
+            else
+            {
+                DisableLaserBeam();
             }
         }
 
@@ -121,6 +109,39 @@ namespace Assets.Scripts
             }
 
             return centerSum/sizeSum;
+        }
+
+        private bool CanHit(
+            List<RaycastHit> raycastHits, 
+            Vector3 position, 
+            Enemy target, 
+            out Enemy hit,
+            out Vector3 hitPosition)
+        {
+            raycastHits.Sort((a, b) => (a.point - position).magnitude.CompareTo((b.point - position).magnitude));
+            hit = null;
+            hitPosition = new Vector3();
+            foreach (var raycastHit in raycastHits)
+            {
+                if (1 << raycastHit.transform.gameObject.layer == ObstacleLayerMask.value)
+                {
+                    return false;
+                }
+                var enemy = raycastHit.transform.GetComponentInParent<Enemy>();
+                if (enemy != null)
+                {
+                    if (hit == null)
+                    {
+                        hit = enemy;
+                        hitPosition = raycastHit.point;
+                    }
+                    if (enemy == target)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
