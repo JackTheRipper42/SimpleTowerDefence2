@@ -46,6 +46,7 @@ namespace Assets.Scripts
             }
             if (_target == null)
             {
+                DisableLaserBeam();
                 return;
             }
 
