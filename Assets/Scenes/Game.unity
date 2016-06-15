@@ -122,7 +122,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 412688, guid: 2267cc0bfafd0de41936e341bc218e47, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11426202, guid: 2267cc0bfafd0de41936e341bc218e47, type: 2}
       propertyPath: Enemy
@@ -167,7 +167,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemiesContainer: {fileID: 2085217833}
+  TowersContainer: {fileID: 1388210630}
   EnemyPrefab: {fileID: 110966, guid: de8ac49c0671e9041a06939576deac00, type: 2}
+  TowerPrefab: {fileID: 126092, guid: 2267cc0bfafd0de41936e341bc218e47, type: 2}
+  PrimaryMouseButtonAxis: Fire1
+  TerrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  PlacementObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!4 &198712690
 Transform:
   m_ObjectHideFlags: 0
@@ -179,8 +188,36 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2085217833}
+  - {fileID: 1388210630}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!1 &1388210629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1388210630}
+  m_Layer: 0
+  m_Name: Towers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1388210630
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1388210629}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 198712690}
+  m_RootOrder: 1
 --- !u!1 &2085217832
 GameObject:
   m_ObjectHideFlags: 0

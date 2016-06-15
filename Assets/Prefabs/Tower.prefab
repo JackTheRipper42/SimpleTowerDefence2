@@ -11,7 +11,7 @@ GameObject:
   - 33: {fileID: 3344142}
   - 65: {fileID: 6592340}
   - 23: {fileID: 2374306}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 463942}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - 33: {fileID: 3395588}
   - 65: {fileID: 6556942}
   - 23: {fileID: 2311382}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ GameObject:
   - 33: {fileID: 3369960}
   - 136: {fileID: 13618258}
   - 23: {fileID: 2384442}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   - 33: {fileID: 3361694}
   - 65: {fileID: 6548662}
   - 23: {fileID: 2364716}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - 4: {fileID: 412688}
   - 114: {fileID: 11426202}
   - 54: {fileID: 5468866}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - 33: {fileID: 3329726}
   - 136: {fileID: 13657356}
   - 23: {fileID: 2389716}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 434894}
   - 120: {fileID: 12032656}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 433484}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}

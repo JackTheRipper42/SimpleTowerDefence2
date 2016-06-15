@@ -10,11 +10,16 @@ namespace Assets.Scripts
     public class GameManager : MonoBehaviour
     {
         public Transform EnemiesContainer;
+        public Transform TowersContainer;
         public GameObject EnemyPrefab;
-
+        public GameObject TowerPrefab;
+        public string PrimaryMouseButtonAxis = "Fire1";
+        public LayerMask TerrainLayerMask;
+        public LayerMask PlacementObstacleLayerMask;
 
         private Settings _settings;
         private List<Enemy> _enemies;
+        private bool _levelLoaded;
 
         public IEnumerable<Enemy> Enemies
         {
@@ -31,7 +36,37 @@ namespace Assets.Scripts
         {
             _settings = FindObjectOfType<Settings>();
             _enemies = new List<Enemy>();
+            _levelLoaded = false;
             StartCoroutine(LoadLevel());
+        }
+
+        protected virtual void Update()
+        {
+            if (!_levelLoaded)
+            {
+                return;
+            }
+
+            if (Input.GetButtonDown(PrimaryMouseButtonAxis))
+            {
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, float.PositiveInfinity, TerrainLayerMask.value))
+                {
+                    var rasterizedPosition = new Vector3(
+                        Mathf.Floor(hit.point.x) + 0.5f,
+                        0f,
+                        Mathf.Floor(hit.point.z) + 0.5f);
+
+                    Vector3 finalPosition;
+                    if (IsRasterizedPositionValid(rasterizedPosition, out finalPosition))
+                    {
+                        var obj = Instantiate(TowerPrefab);
+                        obj.transform.position = finalPosition;
+                        obj.transform.parent = TowersContainer;
+                    }
+                }
+            }
         }
 
         private IEnumerator LoadLevel()
@@ -44,6 +79,8 @@ namespace Assets.Scripts
             {
                 yield return new WaitForEndOfFrame();
             }
+
+            _levelLoaded = true;
 
             var paths = FindObjectsOfType<Path>().ToDictionary(path => path.transform.name, path => path.GetPath());
             StartSpawnCoroutines(level.Item, paths);
@@ -108,6 +145,66 @@ namespace Assets.Scripts
             var enemy = obj.GetComponent<Enemy>();
             enemy.Initialize(path);
             _enemies.Add(enemy);
+        }
+
+        private bool IsRasterizedPositionValid(Vector3 rasterizedPosition, out Vector3 finalPosition)
+        {
+            var sampleOffsets = new[]
+            {
+                new Vector3(0f, 0f, 0f),
+                new Vector3(0.5f, 0f, 0f),
+                new Vector3(-0.5f, 0f, 0f),
+                new Vector3(0.25f, 0f, 0f),
+                new Vector3(-0.25f, 0f, 0f),
+                new Vector3(0f, 0f, 0.5f),
+                new Vector3(0f, 0f, -0.5f),
+                new Vector3(0f, 0f, 0.25f),
+                new Vector3(0f, 0f, -0.25f),
+                new Vector3(0.5f, 0f, 0.5f),
+                new Vector3(-0.5f, 0f, -0.5f),
+                new Vector3(0.25f, 0f, 0.25f),
+                new Vector3(-0.25f, 0f, -0.25f),
+                new Vector3(0.5f, 0f, -0.5f),
+                new Vector3(-0.5f, 0f, 0.5f),
+                new Vector3(0.25f, 0f, -0.25f),
+                new Vector3(-0.25f, 0f, 0.25f),
+            };
+            var heights = new List<float>(sampleOffsets.Length);
+            finalPosition = new Vector3();
+            foreach (var offset in sampleOffsets)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(
+                    new Ray(
+                        rasterizedPosition + offset + new Vector3(0f, 1000f, 0f),
+                        Vector3.down),
+                    out hit,
+                    float.PositiveInfinity,
+                    PlacementObstacleLayerMask.value | TerrainLayerMask.value))
+                {
+                    if (1 << hit.transform.gameObject.layer == TerrainLayerMask.value)
+                    {
+                        heights.Add(hit.point.y);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            var mediumHeight = heights.Sum()/heights.Count;
+
+            if (heights.Any(height => Mathf.Abs(height - mediumHeight) > 0.05))
+            {
+                return false;
+            }
+
+            finalPosition = new Vector3(
+                rasterizedPosition.x,
+                mediumHeight,
+                rasterizedPosition.z);
+            return true;
         }
 
         private static string GetSceneName(Type mapType)
